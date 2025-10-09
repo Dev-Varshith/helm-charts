@@ -1,0 +1,16 @@
+replicaCount: 1
+
+image:
+  repository: orders-service
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources: {}
+
+env:
+  SPRING_PROFILES_ACTIVE: default
+  PAYMENT_SERVICE_URL: http://payments-service:8081

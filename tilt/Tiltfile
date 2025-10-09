@@ -1,0 +1,20 @@
+# --- Tiltfile at helm-charts-ecommerce/tilt/Tiltfile ---
+
+# Build orders-service image
+docker_build(
+    'orders-service',
+    '/Users/p.krishnavarshith/Desktop/orders-service',
+    platform='linux/arm64/v8'
+)
+
+# Build payments-service image
+docker_build(
+    'payments-service',
+    '/Users/p.krishnavarshith/Desktop/payments-service',
+    platform='linux/arm64/v8'
+)
+
+# Deploy Helm charts for both services
+k8s_yaml(helm('../charts/orders-service'))
+k8s_yaml(helm('../charts/payments-service'))
+

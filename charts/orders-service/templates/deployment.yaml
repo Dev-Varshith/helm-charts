@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "orders-service.fullname" . }}
+  labels:
+    app: {{ include "orders-service.name" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "orders-service.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "orders-service.name" . }}
+    spec:
+      containers:
+        - name: orders-service
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ .Values.env.SPRING_PROFILES_ACTIVE }}
+            - name: PAYMENT_SERVICE_URL
+              value: {{ .Values.env.PAYMENT_SERVICE_URL }}
