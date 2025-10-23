@@ -13,4 +13,5 @@ resources: {}
 
 env:
   SPRING_PROFILES_ACTIVE: default
-  PAYMENT_SERVICE_URL: http://payments-service:8081
+  PAYMENTS_SERVICE_HOST: payments-service
+  PAYMENTS_SERVICE_PORT: 8081

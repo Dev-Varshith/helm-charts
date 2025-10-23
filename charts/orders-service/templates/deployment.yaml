@@ -22,6 +22,6 @@ spec:
             - containerPort: {{ .Values.service.port }}
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: {{ .Values.env.SPRING_PROFILES_ACTIVE }}
-            - name: PAYMENT_SERVICE_URL
-              value: {{ .Values.env.PAYMENT_SERVICE_URL }}
+              value: {{ .Values.env.SPRING_PROFILES_ACTIVE | quote }}
+            - name: PAYMENTS_URL
+              value: "http://{{ .Values.env.PAYMENTS_SERVICE_HOST }}:{{ .Values.env.PAYMENTS_SERVICE_PORT }}"

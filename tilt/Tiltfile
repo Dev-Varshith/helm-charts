@@ -1,10 +1,33 @@
 # --- Tiltfile at helm-charts-ecommerce/tilt/Tiltfile ---
+local_resource(
+    name="setup-ingress",
+    cmd="../charts/run_ingress_local.sh",
+    allow_parallel=True,
+    trigger_mode=TRIGGER_MODE_MANUAL,
+)
 
 # Build orders-service image
-docker_build(
+#docker_build(
+#    'orders-service',
+#    '/Users/p.krishnavarshith/Desktop/orders-service',
+#    ignore=['**/build/', '**/.gradle/'],
+#    platform='linux/arm64/v8'
+#)
+
+# Path to your Spring Boot project
+springboot_path = '/Users/p.krishnavarshith/Desktop/orders-service'
+
+# Build the Docker image using Gradle's bootBuildImage
+custom_build(
     'orders-service',
-    '/Users/p.krishnavarshith/Desktop/orders-service',
-    platform='linux/arm64/v8'
+    './gradlew bootBuildImage --imageName=orders-service:tilt',
+    deps=[
+        springboot_path + '/src',
+        springboot_path + '/build.gradle',
+        springboot_path + '/settings.gradle',
+    ],
+    tag='tilt',
+    dir=springboot_path
 )
 
 # Build payments-service image
@@ -14,7 +37,12 @@ docker_build(
     platform='linux/arm64/v8'
 )
 
-# Deploy Helm charts for both services
-k8s_yaml(helm('../charts/orders-service'))
-k8s_yaml(helm('../charts/payments-service'))
+orders_yaml = helm('../charts/orders-service')
+payments_yaml = helm('../charts/payments-service')
+
+k8s_yaml('../charts/ecommerce-ingress.yaml')
+k8s_yaml([orders_yaml, payments_yaml])
+
+k8s_resource('chart-orders-service')
+k8s_resource('chart-payments-service')
 
